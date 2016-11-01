@@ -1,31 +1,102 @@
 package com.npatil.android.mybooks;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.npatil.android.mybooks.data.BooksContract;
+import com.npatil.android.mybooks.data.BooksDbHelper;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class BookListActivity extends AppCompatActivity {
+    private Context mContext;
+
+    boolean isConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
+        ConnectivityManager cm =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
         setContentView(R.layout.activity_book_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            @Override public void onClick(View v) {
+                Log.d("fdfgdfg","clicked!");
+                if (isConnected){
+                    new MaterialDialog.Builder(mContext).title(R.string.add_book)
+                            .content(R.string.content_test)
+                            .inputType(InputType.TYPE_CLASS_TEXT)
+                            .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
+                                @Override public void onInput(MaterialDialog dialog, CharSequence input) {
+                                    // On FAB click, receive user input. Make sure the book doesn't already exist
+                                    // in the DB and proceed accordingly
+                                    Cursor c10 = getContentResolver().query(BooksContract.BooksEntry.CONTENT_URI,
+                                            new String[] { BooksContract.BooksEntry.COLUMN_BOOK_ID}, BooksContract.BooksEntry.COLUMN_ISBN10 + "= ?",
+                                            new String[] { input.toString() }, null);
+                                    Cursor c13 = getContentResolver().query(BooksContract.BooksEntry.CONTENT_URI,
+                                            new String[] { BooksContract.BooksEntry.COLUMN_BOOK_ID}, BooksContract.BooksEntry.COLUMN_ISBN13 + "= ?",
+                                            new String[] { input.toString() }, null);
+                                    if (c10.getCount() != 0 || c13.getCount() != 0) {
+                                        Toast toast =
+                                                Toast.makeText(BookListActivity.this, getString(R.string.book_already_saved_toast),
+                                                        Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                                        toast.show();
+                                        return;
+                                    } else {
+                                        Log.d("fdfgdfg","gfghfghfgh");
+                                        new FetchBookData().execute(input.toString());
+                                        //TODO: Add the book to DB
+                                    }
+                                }
+                            }).show();
+                } else {
+                    networkToast();
+                }
+
             }
         });
+    }
+
+    public void networkToast(){
+        Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -48,5 +119,48 @@ public class BookListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView thumbnailView;
+        public TextView titleView;
+        public TextView authorView;
+
+        public ViewHolder(View view) {
+            super(view);
+            thumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
+            titleView = (TextView) view.findViewById(R.id.book_title);
+            authorView = (TextView) view.findViewById(R.id.book_author);
+        }
+    }
+
+    private class FetchBookData extends AsyncTask<String, Void, Void> {
+        private OkHttpClient httpClient = new OkHttpClient();
+        final String OPENLIB_BASE_URL = "http://openlibrary.org/api/books?";
+        final String LOG_TAG = this.getClass().getSimpleName();
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String isbn = params[0];
+            Uri builtUri = Uri.parse(OPENLIB_BASE_URL).buildUpon()
+                    .appendQueryParameter("bibkeys", "ISBN:"+isbn)
+                    .appendQueryParameter("jscmd", "details")
+                    .appendQueryParameter("format", "json")
+                    .build();
+
+            try {
+                URL url = new URL(builtUri.toString());
+                Request request = new Request.Builder().url(url).build();
+                Response response = null;
+                response = httpClient.newCall(request).execute();
+                Book book = Utils.JsonToBook(response.body().string());
+                Log.i(LOG_TAG,book.toString());
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }

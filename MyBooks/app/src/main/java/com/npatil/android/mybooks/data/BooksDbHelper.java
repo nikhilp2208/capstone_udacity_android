@@ -23,12 +23,14 @@ public class BooksDbHelper extends SQLiteOpenHelper {
                 BooksContract.BooksEntry.COLUMN_BOOK_ID + " TEXT NOT NULL UNIQUE, " +
                 BooksContract.BooksEntry.COLUMN_ISBN10 + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_ISBN13 + " TEXT, " +
+                BooksContract.BooksEntry.COLUMN_LIST_ID + " TEXT NOT NULL, " +
                 BooksContract.BooksEntry.COLUMN_TITLE + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_SUBTITLE + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_DESCRIPTION + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_COVER_PATH + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_RATING + " INTEGER, " +
                 BooksContract.BooksEntry.COLUMN_COMMENT + " TEXT);";
+        sqLiteDatabase.execSQL(SQL_CREATE_BOOKS_TABLE);
     }
 
     @Override

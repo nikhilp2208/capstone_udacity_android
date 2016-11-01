@@ -23,6 +23,7 @@ public class BooksContract {
         public static final String COLUMN_BOOK_ID = "book_id";
         public static final String COLUMN_ISBN10 = "isbn10";
         public static final String COLUMN_ISBN13 = "isbn13";
+        public static final String COLUMN_LIST_ID = "list_id";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_SUBTITLE = "subtitle";
         public static final String COLUMN_DESCRIPTION = "description";
