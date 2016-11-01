@@ -23,6 +23,7 @@ public class Utils {
     }
 
     private static Book getBookFromBookDataMap(HashMap<String, BookData> bookDataMap) {
+        String COVER_BASE_URL = "http://covers.openlibrary.org/b/";
         if(bookDataMap == null) return null;
         Set<String> keys = bookDataMap.keySet();
         if (keys.size() == 0) return null;
@@ -45,6 +46,10 @@ public class Utils {
             book.setIsbn13(isbn);
             book.setIsbn10(details.getIsbn_10()!=null?details.getIsbn_10().get(0):null);
         }
+        String bookId = details.getKey().substring(details.getKey().lastIndexOf('/') + 1);
+        book.setBookId(bookId);
+
+        book.setCoverPath(COVER_BASE_URL+"olid/"+bookId+"-M.jpg");
         return book;
     }
 }

@@ -1,5 +1,7 @@
 package com.npatil.android.mybooks;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,9 +41,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class BookListActivity extends AppCompatActivity {
+    final String LOG_TAG = this.getClass().getSimpleName();
     private Context mContext;
 
     boolean isConnected;
+
+    String mListId = "Reading Now";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,7 @@ public class BookListActivity extends AppCompatActivity {
                                 @Override public void onInput(MaterialDialog dialog, CharSequence input) {
                                     // On FAB click, receive user input. Make sure the book doesn't already exist
                                     // in the DB and proceed accordingly
+                                    //TODO: Add ISBN validation here
                                     Cursor c10 = getContentResolver().query(BooksContract.BooksEntry.CONTENT_URI,
                                             new String[] { BooksContract.BooksEntry.COLUMN_BOOK_ID}, BooksContract.BooksEntry.COLUMN_ISBN10 + "= ?",
                                             new String[] { input.toString() }, null);
@@ -134,13 +140,35 @@ public class BookListActivity extends AppCompatActivity {
         }
     }
 
-    private class FetchBookData extends AsyncTask<String, Void, Void> {
+    public void addBookToDb(Book book, String listId) {
+        ContentValues bookValues = new ContentValues();
+
+        bookValues.put(BooksContract.BooksEntry.COLUMN_BOOK_ID, book.getBookId());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_ISBN10, book.getIsbn10());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_ISBN13, book.getIsbn13());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_TITLE, book.getTitle());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_SUBTITLE, book.getSubtitle());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_DESCRIPTION, book.getDescription());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_COVER_PATH, book.getCoverPath());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_RATING, book.getRating());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_COMMENT, book.getComment());
+        bookValues.put(BooksContract.BooksEntry.COLUMN_LIST_ID,listId);
+
+        Uri insertedUri = getContentResolver().insert(BooksContract.BooksEntry.CONTENT_URI, bookValues);
+
+        long insertedId = ContentUris.parseId(insertedUri);
+
+        Log.d(LOG_TAG,"inserted id: "+insertedId);
+
+    }
+
+    private class FetchBookData extends AsyncTask<String, Void, Book> {
         private OkHttpClient httpClient = new OkHttpClient();
         final String OPENLIB_BASE_URL = "http://openlibrary.org/api/books?";
         final String LOG_TAG = this.getClass().getSimpleName();
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Book doInBackground(String... params) {
             String isbn = params[0];
             Uri builtUri = Uri.parse(OPENLIB_BASE_URL).buildUpon()
                     .appendQueryParameter("bibkeys", "ISBN:"+isbn)
@@ -155,12 +183,22 @@ public class BookListActivity extends AppCompatActivity {
                 response = httpClient.newCall(request).execute();
                 Book book = Utils.JsonToBook(response.body().string());
                 Log.i(LOG_TAG,book.toString());
-                return null;
+                return book;
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Book book) {
+            super.onPostExecute(book);
+            if (book == null) {
+                Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            addBookToDb(book,mListId);
         }
     }
 }

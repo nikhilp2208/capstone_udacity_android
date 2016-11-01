@@ -7,4 +7,5 @@
     <string name="input_hint">9781449362188</string>
     <string name="input_prefill" />
     <string name="book_already_saved_toast">This book is already saved!</string>
+    <string name="book_add_error">Error while adding this book. Please check isbn and retry</string>
 </resources>

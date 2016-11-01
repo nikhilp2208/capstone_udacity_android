@@ -21,6 +21,7 @@ public class BookData {
         private String title;
         private String subtitle;
         private String description;
+        private String key;
         private List<String> isbn_13;
         private List<String> isbn_10;
 
@@ -62,6 +63,14 @@ public class BookData {
 
         public void setIsbn_10(List<String> isbn_10) {
             this.isbn_10 = isbn_10;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
         }
     }
 }
