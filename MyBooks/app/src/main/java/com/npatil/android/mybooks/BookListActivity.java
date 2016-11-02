@@ -15,14 +15,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -57,6 +56,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     private Context mContext;
     private BookCursorAdapter mCursorAdapter;
     private Cursor mCursor;
+    private RecyclerView mRecyclerView;
     boolean isConnected;
 
     String mListId = "Reading Now";
@@ -113,12 +113,12 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         getSupportLoaderManager().initLoader(BOOKS_LOADER, null, this);
         mCursorAdapter = new BookCursorAdapter(this, null);
 
-        recyclerView.setAdapter(mCursorAdapter);
+        mRecyclerView.setAdapter(mCursorAdapter);
     }
 
 
@@ -166,7 +166,10 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                 Log.v("ON_BOOK_LOAD_FINISHED", Integer.toString(data.getCount()));
                 mCursorAdapter.swapCursor(data);
                 mCursor = data;
-                //TODO: Swap cursor
+                int columnCount = getResources().getInteger(R.integer.list_column_count);
+                StaggeredGridLayoutManager sglm =
+                        new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(sglm);
                 break;
             }
         }

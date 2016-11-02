@@ -2,12 +2,10 @@ package com.npatil.android.mybooks;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +32,10 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
         //TODO Change this author
         String author = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_SUBTITLE));
         viewHolder.author.setText((author!=null?author:"Author NA"));
-        Picasso.with(mContext).load(cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH))).into(viewHolder.thumbnail);
+        Picasso.with(mContext)
+                .load(cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH)))
+                .error(R.drawable.no_image)
+                .into(viewHolder.thumbnail);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
             super(itemView);
             itemView.setFocusable(true);
             itemView.setClickable(true);
-            thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+            thumbnail = (ScaleImageView) itemView.findViewById(R.id.thumbnail);
             title = (TextView) itemView.findViewById(R.id.book_title);
             author = (TextView) itemView.findViewById(R.id.book_author);
         }

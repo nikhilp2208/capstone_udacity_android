@@ -49,7 +49,7 @@ public class Utils {
         String bookId = details.getKey().substring(details.getKey().lastIndexOf('/') + 1);
         book.setBookId(bookId);
 
-        book.setCoverPath(COVER_BASE_URL+"olid/"+bookId+"-M.jpg");
+        book.setCoverPath(COVER_BASE_URL+"olid/"+bookId+"-M.jpg?default=false");
         return book;
     }
 }
