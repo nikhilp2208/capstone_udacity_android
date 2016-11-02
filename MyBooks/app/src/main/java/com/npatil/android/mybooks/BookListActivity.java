@@ -3,7 +3,6 @@ package com.npatil.android.mybooks;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,39 +10,53 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.npatil.android.mybooks.data.BooksContract;
-import com.npatil.android.mybooks.data.BooksDbHelper;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class BookListActivity extends AppCompatActivity {
+public class BookListActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int BOOKS_LOADER = 0;
+
+    private static final String[] BOOK_COLUMNS = {
+            BooksContract.BooksEntry._ID,
+            BooksContract.BooksEntry.COLUMN_BOOK_ID,
+            BooksContract.BooksEntry.COLUMN_ISBN10,
+            BooksContract.BooksEntry.COLUMN_ISBN13,
+            BooksContract.BooksEntry.COLUMN_LIST_ID,
+            BooksContract.BooksEntry.COLUMN_TITLE,
+            BooksContract.BooksEntry.COLUMN_SUBTITLE,
+            BooksContract.BooksEntry.COLUMN_DESCRIPTION,
+            BooksContract.BooksEntry.COLUMN_COVER_PATH,
+            BooksContract.BooksEntry.COLUMN_RATING,
+            BooksContract.BooksEntry.COLUMN_COMMENT
+    };
+
     final String LOG_TAG = this.getClass().getSimpleName();
     private Context mContext;
-
+    private BookCursorAdapter mCursorAdapter;
+    private Cursor mCursor;
     boolean isConnected;
 
     String mListId = "Reading Now";
@@ -99,7 +112,16 @@ public class BookListActivity extends AppCompatActivity {
 
             }
         });
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        getSupportLoaderManager().initLoader(BOOKS_LOADER, null, this);
+        mCursorAdapter = new BookCursorAdapter(this, null);
+
+        recyclerView.setAdapter(mCursorAdapter);
     }
+
+
 
     public void networkToast(){
         Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
@@ -127,18 +149,46 @@ public class BookListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView thumbnailView;
-        public TextView titleView;
-        public TextView authorView;
-
-        public ViewHolder(View view) {
-            super(view);
-            thumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
-            titleView = (TextView) view.findViewById(R.id.book_title);
-            authorView = (TextView) view.findViewById(R.id.book_author);
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case BOOKS_LOADER:
+                return new CursorLoader(this, BooksContract.BooksEntry.CONTENT_URI,BOOK_COLUMNS,BooksContract.BooksEntry.COLUMN_LIST_ID + "= ?",new String[] {mListId},null);
+            default:
+                return null;
         }
     }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()) {
+            case BOOKS_LOADER: {
+                Log.v("ON_BOOK_LOAD_FINISHED", Integer.toString(data.getCount()));
+                mCursorAdapter.swapCursor(data);
+                mCursor = data;
+                //TODO: Swap cursor
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCursorAdapter.swapCursor(null);
+    }
+
+//    public static class ViewHolder extends RecyclerView.ViewHolder {
+//        public ImageView thumbnailView;
+//        public TextView titleView;
+//        public TextView authorView;
+//
+//        public ViewHolder(View view) {
+//            super(view);
+//            thumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
+//            titleView = (TextView) view.findViewById(R.id.book_title);
+//            authorView = (TextView) view.findViewById(R.id.book_author);
+//        }
+//    }
 
     public void addBookToDb(Book book, String listId) {
         ContentValues bookValues = new ContentValues();
@@ -182,7 +232,7 @@ public class BookListActivity extends AppCompatActivity {
                 Response response = null;
                 response = httpClient.newCall(request).execute();
                 Book book = Utils.JsonToBook(response.body().string());
-                Log.i(LOG_TAG,book.toString());
+                if (book!=null) Log.i(LOG_TAG,book.toString());
                 return book;
             } catch (IOException e) {
                 e.printStackTrace();
