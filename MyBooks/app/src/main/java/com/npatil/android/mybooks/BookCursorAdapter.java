@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,15 @@ import com.squareup.picasso.Picasso;
  */
 
 public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapter.ViewHolder> {
+    final String LOG_TAG = this.getClass().getSimpleName();
 
     private static Context mContext;
+    Cursor mCursor;
 
     public BookCursorAdapter(Context context, Cursor c) {
         super(context, c);
         mContext = context;
+        mCursor = c;
     }
 
     @Override
@@ -47,7 +51,11 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext,BookDetailActivity.class);
-                intent.setData(BooksContract.BooksEntry.buildBooksUri(getItemId(viewHolder.getAdapterPosition())));
+                Cursor cursor = getCursor();
+                getItemId(viewHolder.getAdapterPosition());
+                String bookId = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_BOOK_ID));
+                Log.d(LOG_TAG,bookId);
+                intent.setData(BooksContract.BooksEntry.buildBooksUriWithBookId(bookId));
                 mContext.startActivity(intent);
             }
         });
