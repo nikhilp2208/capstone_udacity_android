@@ -13,7 +13,6 @@ import android.widget.ImageView;
  */
 
 public class ScaleImageView extends ImageView {
-    private float mAspectRatio = 1.5f;
 
     public ScaleImageView(Context context) {
         super(context);

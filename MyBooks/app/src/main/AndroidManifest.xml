@@ -20,13 +20,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="com.npatil.android.mybooks"
             android:name=".data.BooksProvider"
+            android:authorities="com.npatil.android.mybooks"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.npatil.android">
-        </provider>
+            android:permission="com.npatil.android"></provider>
+
+        <activity android:name=".BookDetailActivity"></activity>
     </application>
 
 </manifest>

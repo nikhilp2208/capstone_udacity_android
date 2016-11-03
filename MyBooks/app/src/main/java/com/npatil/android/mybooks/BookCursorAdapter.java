@@ -1,6 +1,7 @@
 package com.npatil.android.mybooks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +42,15 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(itemView);
+        final ViewHolder viewHolder = new ViewHolder(itemView);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,BookDetailActivity.class);
+                intent.setData(BooksContract.BooksEntry.buildBooksUri(getItemId(viewHolder.getAdapterPosition())));
+                mContext.startActivity(intent);
+            }
+        });
         return viewHolder;
     }
 
