@@ -106,18 +106,138 @@
             android:background="@color/max_width_ll_background"
             android:elevation="2dp">
 
-            <TextView
-                android:id="@+id/article_body"
-                style="?android:attr/textAppearanceMedium"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
-                android:layout_marginRight="@dimen/detail_inner_horiz_margin"
-                android:layout_marginTop="@dimen/detail_inner_horiz_margin"
-                android:paddingBottom="@dimen/detail_body_bottom_margin"
-                android:textColorLink="@color/colorAccent"
-                android:linksClickable="true"
-                android:textSize="@dimen/detail_body_text_size" />
+                android:layout_margin="12dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/detail_book_isbn10"
+                        android:text="ISBN10: "
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/detail_inner_horiz_margin"/>
+
+                    <TextView
+                        android:id="@+id/detail_book_isbn13"
+                        android:text="ISBN13: "
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginBottom="@dimen/detail_inner_horiz_margin"/>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:text="Description"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginRight="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginTop="@dimen/detail_inner_horiz_margin"
+                        android:paddingBottom="@dimen/detail_body_bottom_margin"
+                        android:textColorLink="@color/colorAccent"
+                        android:linksClickable="true"
+                        android:textSize="@dimen/detail_heading_text_size" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#dcc"/>
+
+                    <TextView
+                        android:id="@+id/detail_book_description"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginRight="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginTop="@dimen/detail_inner_horiz_margin"
+                        android:paddingBottom="@dimen/detail_body_bottom_margin"
+                        android:textColorLink="@color/colorAccent"
+                        android:linksClickable="true"
+                        android:textSize="@dimen/detail_body_text_size" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:text="My Ratings and Review"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginRight="@dimen/detail_inner_horiz_margin"
+                        android:layout_marginTop="@dimen/detail_inner_horiz_margin"
+                        android:paddingBottom="@dimen/detail_body_bottom_margin"
+                        android:textColorLink="@color/colorAccent"
+                        android:linksClickable="true"
+                        android:textSize="@dimen/detail_heading_text_size" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#dcc"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/detail_inner_horiz_margin"
+                        android:editable="false"
+                        android:hint="Write your review here"
+                        android:textColorHint="#BABABA"
+                        android:inputType="none" />
+
+                    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/detail_inner_horiz_margin"
+                        app:srb_numberOfStars="5"
+                        app:srb_stepSize="1.0"
+                        app:srb_borderColor="@color/colorAccent"
+                        app:srb_fillColor="@color/colorAccent"/>
+
+                    <Button
+                        android:text="Update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/colorAccent"
+                        android:textColor="#fff"
+                        android:layout_marginBottom="@dimen/detail_inner_horiz_margin" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </com.npatil.android.mybooks.MaxWidthLinearLayout>
 
