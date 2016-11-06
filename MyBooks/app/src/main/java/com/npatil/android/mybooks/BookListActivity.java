@@ -12,16 +12,21 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -57,6 +62,10 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     private BookCursorAdapter mCursorAdapter;
     private Cursor mCursor;
     private RecyclerView mRecyclerView;
+    private String[] mNavDrawerStrings;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private Toolbar mToolbar;
     boolean isConnected;
 
     String mListId = "Reading Now";
@@ -72,6 +81,12 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         setContentView(R.layout.activity_book_list);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +134,30 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         mCursorAdapter = new BookCursorAdapter(this, null);
 
         mRecyclerView.setAdapter(mCursorAdapter);
+
+        mNavDrawerStrings = getResources().getStringArray(R.array.navigation_drawer_items);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mNavDrawerStrings));
+        mDrawerList.setItemChecked(0,true);
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mDrawerList.setItemChecked(position, true);
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.openDrawer(mDrawerList);
+                Log.d(LOG_TAG, "navigation clicked");
+            }
+        });
+
     }
 
 

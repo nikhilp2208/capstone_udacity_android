@@ -12,4 +12,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_share">Share</string>
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_close">close drawer</string>
+
+    <string-array
+        name="navigation_drawer_items">
+        <item>Reading Now</item>
+        <item>To be read</item>
+        <item>Already read</item>
+    </string-array>
 </resources>
