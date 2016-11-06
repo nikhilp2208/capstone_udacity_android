@@ -178,6 +178,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                 .build();
         mAdView.loadAd(adRequest);
 
+        ((MyApplication) getApplication()).startTracking();
     }
 
 

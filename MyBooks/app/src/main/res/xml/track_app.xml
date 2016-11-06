@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ga_trackingId">UA-86537540-1</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <screenName name="com.npatil.android.mybooks.BookListActivity">
+        Book List
+    </screenName>
+    <screenName name="com.npatil.android.mybooks.BookDetailActivity">
+        Book Detail
+    </screenName>
+</resources>
