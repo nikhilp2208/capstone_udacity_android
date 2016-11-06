@@ -129,13 +129,6 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        getSupportLoaderManager().initLoader(BOOKS_LOADER, null, this);
-        mCursorAdapter = new BookCursorAdapter(this, null);
-
-        mRecyclerView.setAdapter(mCursorAdapter);
-
         mNavDrawerStrings = getResources().getStringArray(R.array.navigation_drawer_items);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -156,6 +149,15 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                 mDrawerLayout.closeDrawer(mDrawerList);
             }
         });
+
+
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        getSupportLoaderManager().initLoader(BOOKS_LOADER, null, this);
+        mCursorAdapter = new BookCursorAdapter(this, null);
+
+        mRecyclerView.setAdapter(mCursorAdapter);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
