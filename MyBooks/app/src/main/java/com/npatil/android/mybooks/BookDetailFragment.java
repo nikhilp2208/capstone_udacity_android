@@ -26,8 +26,17 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
     final String LOG_TAG = this.getClass().getSimpleName();
     private static final int BOOK_DETAILS_LOADER = 0;
     static final String DETAIL_URI = "URI";
+    private static final String PREFIX_ISBN10 = "ISBN10: ";
+    private static final String PREFIX_ISBN13 = "ISBN13: ";
 
     Uri mBookUri;
+
+    private String mCoverPath;
+    private String mTitle;
+    private String mIsbn10;
+    private String mIsbn13;
+    private String mSubtitle;
+    private String mDescription;
 
     private View mRootView;
 
@@ -89,6 +98,11 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
         detailToolbar = (Toolbar) mRootView.findViewById(R.id.detail_toolbar);
         mCoverImageView = (ImageView) mRootView.findViewById(R.id.detail_cover);
         mTitleTextView = (TextView) mRootView.findViewById(R.id.detail_book_title);
+        mSubtitleTextView = (TextView) mRootView.findViewById(R.id.detail_book_subtitle);
+        mIsbn10TextView = (TextView) mRootView.findViewById(R.id.detail_book_isbn10);
+        mIsbn13TextView = (TextView) mRootView.findViewById(R.id.detail_book_isbn13);
+        mDescriptionTextView = (TextView) mRootView.findViewById(R.id.detail_book_description);
+        mAuthorTextView = (TextView) mRootView.findViewById(R.id.detail_book_author);
 
         return mRootView;
     }
@@ -106,13 +120,26 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
         if (data != null && data.moveToFirst()) {
             Log.d(LOG_TAG,"data not null");
             Context context = getContext();
+
+            mCoverPath = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH));
+            mTitle = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_TITLE));
+            mIsbn10 = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_ISBN10));
+            mIsbn13 = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_ISBN13));
+            mSubtitle = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_SUBTITLE));
+            mDescription = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_DESCRIPTION));
+
             Picasso.with(context)
-                    .load(data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH)))
+                    .load(mCoverPath)
                     .error(R.drawable.no_image)
                     .into(mCoverImageView);
-            String title = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_TITLE));
-            mTitleTextView.setText(title);
-            detailToolbar.setTitle(title);
+
+            mTitleTextView.setText(mTitle);
+            detailToolbar.setTitle(mTitle);
+            mIsbn10TextView.setText((mIsbn10 != null?PREFIX_ISBN10+mIsbn10:getString(R.string.na)));
+            mIsbn13TextView.setText((mIsbn13 != null?PREFIX_ISBN13+mIsbn13:getString(R.string.na)));
+            mDescriptionTextView.setText((mDescription != null?mDescription:getString(R.string.decription_not_available)));
+            if (mSubtitle != null) mSubtitleTextView.setText(mSubtitle);
+
         }
         Log.d(LOG_TAG,"data null");
     }

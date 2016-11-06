@@ -14,6 +14,11 @@
     <string name="action_share">Share</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
+    <string name="decription_not_available">Description not available for this book</string>
+    <string name="detail_ratings_and_review_header">My Ratings and Review</string>
+    <string name="detail_review_hint">Write your review here</string>
+    <string name="detail_update_button_text" translatable="false">Update</string>
+    <string name="na" translatable="false">NA</string>
 
     <string-array
         name="navigation_drawer_items">
