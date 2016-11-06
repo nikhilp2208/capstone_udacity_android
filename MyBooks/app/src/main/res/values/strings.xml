@@ -23,6 +23,9 @@
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
     <string name="ad_app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="empty_book_list">No books in \"Reading Now\" list</string>
+    <string name="reading_now_widget_label">Reading Now</string>
+    <string name="intent_book_id_string">book_id</string>
 
     <string-array
         name="navigation_drawer_items">

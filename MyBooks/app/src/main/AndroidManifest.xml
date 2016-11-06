@@ -33,6 +33,20 @@
             android:exported="true"
             android:permission="com.npatil.android"></provider>
 
+        <receiver android:name=".widget.BookWidgetProvider"
+            android:label="@string/reading_now_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+
+        <service
+            android:name=".widget.BookWidgetRemoteViewsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
         <activity android:name=".BookDetailActivity"></activity>
     </application>
 

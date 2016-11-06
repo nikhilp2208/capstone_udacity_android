@@ -1,9 +1,14 @@
 package com.npatil.android.mybooks;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.npatil.android.mybooks.widget.BookWidgetProvider;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,5 +56,12 @@ public class Utils {
 
         book.setCoverPath(COVER_BASE_URL+"olid/"+bookId+"-M.jpg?default=false");
         return book;
+    }
+
+    public static void updateWidgets(Context context){
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+        ComponentName component = new ComponentName(context, BookWidgetProvider.class);
+        int[] widgetIds = widgetManager.getAppWidgetIds(component);
+        widgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.widget_list);
     }
 }

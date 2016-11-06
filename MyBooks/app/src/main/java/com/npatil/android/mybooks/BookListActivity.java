@@ -248,6 +248,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
+        Utils.updateWidgets(mContext);
     }
 
     @Override
