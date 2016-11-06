@@ -34,6 +34,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.npatil.android.mybooks.data.BooksContract;
 
 import java.io.IOException;
@@ -121,7 +123,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                                     } else {
                                         Log.d("fdfgdfg","gfghfghfgh");
                                         new FetchBookData().execute(input.toString());
-                                        //TODO: Add the book to DB
+                                        sendAddBookHit(input.toString());
                                     }
                                 }
                             }).show();
@@ -181,6 +183,15 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         ((MyApplication) getApplication()).startTracking();
     }
 
+    private void sendAddBookHit(String bookId) {
+        Tracker tracker = ((MyApplication) getApplication()).getTracker();
+
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Book actions")
+                .setAction("Add books")
+                .setLabel(bookId)
+                .build());
+    }
 
 
     public void networkToast(){
