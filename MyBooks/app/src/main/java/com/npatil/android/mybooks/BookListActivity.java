@@ -31,6 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.npatil.android.mybooks.data.BooksContract;
 
 import java.io.IOException;
@@ -166,6 +169,14 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                 Log.d(LOG_TAG, "navigation clicked");
             }
         });
+
+        MobileAds.initialize(getApplicationContext(),getString(R.string.ad_app_id));
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
 
     }
 
