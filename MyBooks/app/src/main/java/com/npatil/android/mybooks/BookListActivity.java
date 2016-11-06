@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -68,7 +69,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     private Toolbar mToolbar;
     boolean isConnected;
 
-    String mListId = "Reading Now";
+    String mListId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,12 +141,18 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mNavDrawerStrings));
+
+        //Initially pointing to first item in the NavDrawerList
         mDrawerList.setItemChecked(0,true);
+        mListId = mNavDrawerStrings[0];
+
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mDrawerList.setItemChecked(position, true);
+                mListId = ((TextView) view).getText().toString();
+                getSupportLoaderManager().restartLoader(BOOKS_LOADER,null,BookListActivity.this);
                 mDrawerLayout.closeDrawer(mDrawerList);
             }
         });
@@ -203,15 +210,19 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         switch (loader.getId()) {
             case BOOKS_LOADER: {
                 Log.v("ON_BOOK_LOAD_FINISHED", Integer.toString(data.getCount()));
-                mCursorAdapter.swapCursor(data);
-                mCursor = data;
-                int columnCount = getResources().getInteger(R.integer.list_column_count);
-                StaggeredGridLayoutManager sglm =
-                        new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-                mRecyclerView.setLayoutManager(sglm);
+                handleOnLoadFinished(data);
                 break;
             }
         }
+    }
+
+    private void handleOnLoadFinished(Cursor data) {
+        mCursorAdapter.swapCursor(data);
+        mCursor = data;
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(sglm);
     }
 
     @Override
