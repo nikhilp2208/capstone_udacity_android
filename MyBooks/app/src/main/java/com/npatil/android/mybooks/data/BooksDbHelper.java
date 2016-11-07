@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class BooksDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "books.db";
 
     public BooksDbHelper(Context context) {
@@ -29,7 +29,8 @@ public class BooksDbHelper extends SQLiteOpenHelper {
                 BooksContract.BooksEntry.COLUMN_DESCRIPTION + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_COVER_PATH + " TEXT, " +
                 BooksContract.BooksEntry.COLUMN_RATING + " INTEGER, " +
-                BooksContract.BooksEntry.COLUMN_COMMENT + " TEXT);";
+                BooksContract.BooksEntry.COLUMN_COMMENT + " TEXT, " +
+                BooksContract.BooksEntry.COLUMN_AUTHORS+ " TEXT);";
         sqLiteDatabase.execSQL(SQL_CREATE_BOOKS_TABLE);
     }
 

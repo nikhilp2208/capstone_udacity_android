@@ -35,7 +35,7 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
         String title = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_TITLE));
         viewHolder.title.setText((title!=null?title:"Title NA"));
         //TODO Change this author
-        String author = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_SUBTITLE));
+        String author = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_AUTHORS));
         viewHolder.author.setText((author!=null?author:"Author NA"));
         Picasso.with(mContext)
                 .load(cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH)))

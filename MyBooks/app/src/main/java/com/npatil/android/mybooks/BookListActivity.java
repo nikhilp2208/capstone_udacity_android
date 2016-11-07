@@ -60,7 +60,8 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
             BooksContract.BooksEntry.COLUMN_DESCRIPTION,
             BooksContract.BooksEntry.COLUMN_COVER_PATH,
             BooksContract.BooksEntry.COLUMN_RATING,
-            BooksContract.BooksEntry.COLUMN_COMMENT
+            BooksContract.BooksEntry.COLUMN_COMMENT,
+            BooksContract.BooksEntry.COLUMN_AUTHORS,
     };
 
     final String LOG_TAG = this.getClass().getSimpleName();
@@ -73,6 +74,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     private ListView mDrawerList;
     private Toolbar mToolbar;
     boolean isConnected;
+    ConnectivityManager mconnectivityManager;
 
     String mListId;
 
@@ -80,10 +82,10 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        ConnectivityManager cm =
+        mconnectivityManager =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = mconnectivityManager.getActiveNetworkInfo();
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         setContentView(R.layout.activity_book_list);
@@ -98,6 +100,9 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Log.d("fdfgdfg","clicked!");
+                NetworkInfo activeNetwork = mconnectivityManager.getActiveNetworkInfo();
+                isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
                 if (isConnected){
                     new MaterialDialog.Builder(mContext).title(R.string.add_book)
                             .content(R.string.content_test)
@@ -128,7 +133,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                                 }
                             }).show();
                 } else {
-                    networkToast();
+                    networkToast(R.string.network_toast);
                 }
 
             }
@@ -181,6 +186,8 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         mAdView.loadAd(adRequest);
 
         ((MyApplication) getApplication()).startTracking();
+
+        if(!isConnected) networkToast(R.string.startup_network_toast);
     }
 
     private void sendAddBookHit(String bookId) {
@@ -194,8 +201,8 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     }
 
 
-    public void networkToast(){
-        Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+    public void networkToast(int stringId){
+        Toast.makeText(mContext, getString(stringId), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -282,6 +289,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         bookValues.put(BooksContract.BooksEntry.COLUMN_RATING, book.getRating());
         bookValues.put(BooksContract.BooksEntry.COLUMN_COMMENT, book.getComment());
         bookValues.put(BooksContract.BooksEntry.COLUMN_LIST_ID,listId);
+        bookValues.put(BooksContract.BooksEntry.COLUMN_AUTHORS,book.getAuthors());
 
         Uri insertedUri = getContentResolver().insert(BooksContract.BooksEntry.CONTENT_URI, bookValues);
 

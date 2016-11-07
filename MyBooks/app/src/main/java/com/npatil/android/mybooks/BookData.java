@@ -24,6 +24,7 @@ public class BookData {
         private String key;
         private List<String> isbn_13;
         private List<String> isbn_10;
+        private String by_statement;
 
         public String getTitle() {
             return title;
@@ -71,6 +72,14 @@ public class BookData {
 
         public void setKey(String key) {
             this.key = key;
+        }
+
+        public String getBy_statement() {
+            return by_statement;
+        }
+
+        public void setBy_statement(String by_statement) {
+            this.by_statement = by_statement;
         }
     }
 }

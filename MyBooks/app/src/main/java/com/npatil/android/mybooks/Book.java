@@ -15,6 +15,7 @@ public class Book {
     private String coverPath;
     private String rating;
     private String comment;
+    private String authors;
 
     public String getBookId() {
         return bookId;
@@ -96,6 +97,14 @@ public class Book {
         this.comment = comment;
     }
 
+    public String getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(String authors) {
+        this.authors = authors;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -109,6 +118,7 @@ public class Book {
                 ", coverPath='" + coverPath + '\'' +
                 ", rating='" + rating + '\'' +
                 ", comment='" + comment + '\'' +
+                ", authors='" + authors + '\'' +
                 '}';
     }
 }

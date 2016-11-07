@@ -30,6 +30,7 @@ public class BooksContract {
         public static final String COLUMN_COVER_PATH = "cover_path";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_COMMENT = "comment";
+        public static final String COLUMN_AUTHORS = "authors";
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_BOOKS).build();
 

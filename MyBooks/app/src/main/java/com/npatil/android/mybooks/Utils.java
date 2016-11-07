@@ -4,15 +4,11 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.npatil.android.mybooks.widget.BookWidgetProvider;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,7 +49,7 @@ public class Utils {
         }
         String bookId = details.getKey().substring(details.getKey().lastIndexOf('/') + 1);
         book.setBookId(bookId);
-
+        book.setAuthors(details.getBy_statement());
         book.setCoverPath(COVER_BASE_URL+"olid/"+bookId+"-M.jpg?default=false");
         return book;
     }
