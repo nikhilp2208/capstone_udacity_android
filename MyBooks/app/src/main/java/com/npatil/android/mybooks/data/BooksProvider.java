@@ -126,6 +126,11 @@ public class BooksProvider extends ContentProvider {
                 count = sqLiteDatabase.update(BooksContract.BooksEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
+            case BOOK_WITH_ID: {
+                String bookId = BooksContract.BooksEntry.getBookIdFromUri(uri);
+                count = sqLiteDatabase.update(BooksContract.BooksEntry.TABLE_NAME, values, sBookIdSelection, new String[] {bookId});
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri:" + uri);
         }

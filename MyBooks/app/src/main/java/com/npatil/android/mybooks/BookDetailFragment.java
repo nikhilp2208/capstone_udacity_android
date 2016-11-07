@@ -1,6 +1,6 @@
 package com.npatil.android.mybooks;
 
-import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,15 +9,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.npatil.android.mybooks.data.BooksContract;
 import com.squareup.picasso.Picasso;
 
@@ -31,15 +35,18 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
 
     Uri mBookUri;
 
+    private String mBookId;
     private String mCoverPath;
     private String mTitle;
     private String mIsbn10;
     private String mIsbn13;
     private String mSubtitle;
     private String mDescription;
+    private String mComment;
+    private Integer mRating;
 
     private View mRootView;
-
+    private Toolbar mToolbar;
     ImageView mCoverImageView;
     TextView mTitleTextView;
     TextView mSubtitleTextView;
@@ -47,9 +54,10 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
     TextView mIsbn10TextView;
     TextView mIsbn13TextView;
     TextView mDescriptionTextView;
-    TextView mCommentsTextView;
-    RatingBar mRatingBar;
+    EditText mCommentsEditText;
+    SimpleRatingBar mRatingBar;
     Toolbar detailToolbar;
+    Button mUpdateButton;
 
 
     private static final String[] BOOK_COLUMNS = {
@@ -85,7 +93,14 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_book_detail, container, false);
-
+        mToolbar = (Toolbar) mRootView.findViewById(R.id.detail_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -103,8 +118,40 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
         mIsbn13TextView = (TextView) mRootView.findViewById(R.id.detail_book_isbn13);
         mDescriptionTextView = (TextView) mRootView.findViewById(R.id.detail_book_description);
         mAuthorTextView = (TextView) mRootView.findViewById(R.id.detail_book_author);
+        mCommentsEditText = (EditText) mRootView.findViewById(R.id.detail_book_comment);
+        mCommentsEditText.setTag(mCommentsEditText.getKeyListener());
+        mCommentsEditText.setKeyListener(null);
+        mRatingBar = (SimpleRatingBar) mRootView.findViewById(R.id.detail_book_rating);
+        mUpdateButton = (Button) mRootView.findViewById(R.id.detail_update_button);
 
+        mCommentsEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCommentsEditText.setKeyListener((KeyListener) mCommentsEditText.getTag());;
+            }
+        });
+
+        mUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateCommentAndRating();
+                mCommentsEditText.setTag(mCommentsEditText.getKeyListener());
+                mCommentsEditText.setKeyListener(null);
+            }
+        });
         return mRootView;
+    }
+
+    private void updateCommentAndRating() {
+        Uri updateUri = BooksContract.BooksEntry.buildBooksUriWithBookId(mBookId);
+
+        ContentValues bookValues = new ContentValues();
+        bookValues.put(BooksContract.BooksEntry.COLUMN_RATING, Math.round(mRatingBar.getRating()));
+        if (mCommentsEditText.getText() != null) bookValues.put(BooksContract.BooksEntry.COLUMN_COMMENT, mCommentsEditText.getText().toString());
+
+        Log.i(LOG_TAG,"updateUri: "+ updateUri);
+        Log.i(LOG_TAG,"contentValues: "+bookValues);
+        getActivity().getContentResolver().update(updateUri,bookValues,null,null);
     }
 
     @Override
@@ -121,12 +168,18 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
             Log.d(LOG_TAG,"data not null");
             Context context = getContext();
 
+            mBookId = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_BOOK_ID));
             mCoverPath = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH));
             mTitle = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_TITLE));
             mIsbn10 = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_ISBN10));
             mIsbn13 = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_ISBN13));
             mSubtitle = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_SUBTITLE));
             mDescription = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_DESCRIPTION));
+            mComment = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_COMMENT));
+            if(!data.isNull(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_RATING))) {
+                mRating = data.getInt(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_RATING));
+                Log.i(LOG_TAG,"rating: "+ mRating);
+            }
 
             Picasso.with(context)
                     .load(mCoverPath)
@@ -139,6 +192,8 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
             mIsbn13TextView.setText((mIsbn13 != null?PREFIX_ISBN13+mIsbn13:getString(R.string.na)));
             mDescriptionTextView.setText((mDescription != null?mDescription:getString(R.string.decription_not_available)));
             if (mSubtitle != null) mSubtitleTextView.setText(mSubtitle);
+            if (mComment != null) mCommentsEditText.setText(mComment);
+            if (mRating != null) mRatingBar.setRating(mRating);
 
         }
         Log.d(LOG_TAG,"data null");

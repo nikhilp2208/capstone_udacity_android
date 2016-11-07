@@ -217,15 +217,15 @@
                         android:background="#dcc"/>
 
                     <EditText
+                        android:id="@+id/detail_book_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/detail_inner_horiz_margin"
-                        android:editable="false"
                         android:hint="@string/detail_review_hint"
-                        android:textColorHint="#BABABA"
-                        android:inputType="none" />
+                        android:textColorHint="#BABABA" />
 
                     <com.iarcuschin.simpleratingbar.SimpleRatingBar
+                        android:id="@+id/detail_book_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -236,6 +236,7 @@
                         app:srb_fillColor="@color/colorAccent"/>
 
                     <Button
+                        android:id="@+id/detail_update_button"
                         android:text="@string/detail_update_button_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
