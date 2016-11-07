@@ -50,7 +50,7 @@ public class Utils {
         String bookId = details.getKey().substring(details.getKey().lastIndexOf('/') + 1);
         book.setBookId(bookId);
         book.setAuthors(details.getBy_statement());
-        book.setCoverPath(COVER_BASE_URL+"olid/"+bookId+"-M.jpg?default=false");
+        book.setCoverPath(COVER_BASE_URL+"isbn/"+isbn+"-M.jpg?default=false");
         return book;
     }
 
