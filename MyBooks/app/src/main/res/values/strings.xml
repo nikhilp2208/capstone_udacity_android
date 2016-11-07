@@ -26,6 +26,10 @@
     <string name="empty_book_list">No books in \"Reading Now\" list</string>
     <string name="reading_now_widget_label">Reading Now</string>
     <string name="intent_book_id_string">book_id</string>
+    <string name="share_text_intro">"Hey! Check out this book "</string>
+    <string name="share_text_rating">"I would rate it "</string>
+    <string name="share_text_comment">"My comments on this is "</string>
+    <string name="share_text_stars">" stars"</string>
 
     <string-array
         name="navigation_drawer_items">

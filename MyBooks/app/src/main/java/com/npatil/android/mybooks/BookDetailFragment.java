@@ -2,11 +2,13 @@ package com.npatil.android.mybooks;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -139,7 +141,30 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
                 mCommentsEditText.setKeyListener(null);
             }
         });
+
+        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareBookInfo();
+            }
+        });
+
         return mRootView;
+    }
+
+    private void shareBookInfo() {
+        String shareText;
+        String title = ((mTitle!=null)?mTitle:"NA");
+        String rating = (mRating!=null && mRating!=0)? mRating.toString():"NA";
+        String comment = ((mComment!=null && !mComment.isEmpty())?mComment:"NA");
+
+        shareText = getString(R.string.share_text_intro) + "\"" +title + "\"" + "\n"
+                + getString(R.string.share_text_rating) + rating + getString(R.string.share_text_stars) + "\n"
+                + getString(R.string.share_text_comment) + "\"" + comment + "\"";
+        startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                .setType("text/plain")
+                .setText(shareText)
+                .getIntent(), getString(R.string.action_share)));
     }
 
     private void updateCommentAndRating() {
