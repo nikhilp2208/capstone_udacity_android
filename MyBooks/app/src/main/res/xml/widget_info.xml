@@ -7,4 +7,4 @@
     android:minResizeWidth="@dimen/widget_min_resize_width"
     android:updatePeriodMillis="0"
     android:resizeMode="horizontal|vertical"
-    android:previewImage="@drawable/ic_add_black_24dp"/>
+    android:previewImage="@drawable/widget_preview"/>
