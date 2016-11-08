@@ -95,11 +95,11 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        mToolbar.setNavigationContentDescription(R.string.content_desc_book_list_menu_button);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Log.d("fdfgdfg","clicked!");
                 NetworkInfo activeNetwork = mconnectivityManager.getActiveNetworkInfo();
                 isConnected = activeNetwork != null &&
                         activeNetwork.isConnectedOrConnecting();
@@ -109,9 +109,6 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                             .inputType(InputType.TYPE_CLASS_TEXT)
                             .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
                                 @Override public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    // On FAB click, receive user input. Make sure the book doesn't already exist
-                                    // in the DB and proceed accordingly
-                                    //TODO: Add ISBN validation here
                                     Cursor c10 = getContentResolver().query(BooksContract.BooksEntry.CONTENT_URI,
                                             new String[] { BooksContract.BooksEntry.COLUMN_BOOK_ID}, BooksContract.BooksEntry.COLUMN_ISBN10 + "= ?",
                                             new String[] { input.toString() }, null);
@@ -126,7 +123,6 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                                         toast.show();
                                         return;
                                     } else {
-                                        Log.d("fdfgdfg","gfghfghfgh");
                                         new FetchBookData().execute(input.toString());
                                         sendAddBookHit(input.toString());
                                     }
@@ -141,6 +137,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
 
         mNavDrawerStrings = getResources().getStringArray(R.array.navigation_drawer_items);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setContentDescription(getString(R.string.content_desc_book_list_menu));
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mNavDrawerStrings));
@@ -214,12 +211,8 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -262,19 +255,6 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
     }
-
-//    public static class ViewHolder extends RecyclerView.ViewHolder {
-//        public ImageView thumbnailView;
-//        public TextView titleView;
-//        public TextView authorView;
-//
-//        public ViewHolder(View view) {
-//            super(view);
-//            thumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
-//            titleView = (TextView) view.findViewById(R.id.book_title);
-//            authorView = (TextView) view.findViewById(R.id.book_author);
-//        }
-//    }
 
     public void addBookToDb(Book book, String listId) {
         ContentValues bookValues = new ContentValues();
@@ -321,7 +301,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
                 Book book = Utils.JsonToBook(response.body().string());
                 if (book!=null) Log.i(LOG_TAG,book.toString());
                 return book;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

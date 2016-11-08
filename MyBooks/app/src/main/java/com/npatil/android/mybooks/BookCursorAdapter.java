@@ -33,10 +33,9 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         String title = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_TITLE));
-        viewHolder.title.setText((title!=null?title:"Title NA"));
-        //TODO Change this author
+        viewHolder.title.setText((title!=null?title:mContext.getString(R.string.default_title_card)));
         String author = cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_AUTHORS));
-        viewHolder.author.setText((author!=null?author:"Author NA"));
+        viewHolder.author.setText((author!=null?author:mContext.getString(R.string.default_author_card)));
         Picasso.with(mContext)
                 .load(cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH)))
                 .error(R.drawable.no_image)

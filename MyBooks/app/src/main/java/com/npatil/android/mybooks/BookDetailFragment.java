@@ -32,9 +32,6 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
     final String LOG_TAG = this.getClass().getSimpleName();
     private static final int BOOK_DETAILS_LOADER = 0;
     static final String DETAIL_URI = "URI";
-    private static final String PREFIX_ISBN10 = "ISBN10: ";
-    private static final String PREFIX_ISBN13 = "ISBN13: ";
-    private static final String PREFIX_AUTHORS = "Authors: ";
 
     Uri mBookUri;
 
@@ -157,9 +154,9 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
 
     private void shareBookInfo() {
         String shareText;
-        String title = ((mTitle!=null)?mTitle:"NA");
-        String rating = (mRating!=null && mRating!=0)? mRating.toString():"NA";
-        String comment = ((mComment!=null && !mComment.isEmpty())?mComment:"NA");
+        String title = ((mTitle!=null)?mTitle:getString(R.string.na));
+        String rating = (mRating!=null && mRating!=0)? mRating.toString():getString(R.string.na);
+        String comment = ((mComment!=null && !mComment.isEmpty())?mComment:getString(R.string.na));
 
         shareText = getString(R.string.share_text_intro) + "\"" +title + "\"" + "\n"
                 + getString(R.string.share_text_rating) + rating + getString(R.string.share_text_stars) + "\n"
@@ -208,6 +205,7 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
 
             if(!data.isNull(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_RATING))) {
                 mRating = data.getInt(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_RATING));
+                mRatingBar.setContentDescription(mRating+getString(R.string.content_desc_rating_suffix));
                 Log.i(LOG_TAG,"rating: "+ mRating);
             }
 
@@ -218,13 +216,13 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
 
             mTitleTextView.setText(mTitle);
             detailToolbar.setTitle(mTitle);
-            mIsbn10TextView.setText((mIsbn10 != null?PREFIX_ISBN10+mIsbn10:PREFIX_ISBN10+getString(R.string.na)));
-            mIsbn13TextView.setText((mIsbn13 != null?PREFIX_ISBN13+mIsbn13:PREFIX_ISBN13+getString(R.string.na)));
+            mIsbn10TextView.setText((mIsbn10 != null?getString(R.string.isbn10_default_sub_header)+mIsbn10:getString(R.string.isbn10_default_sub_header)+getString(R.string.na)));
+            mIsbn13TextView.setText((mIsbn13 != null?getString(R.string.isbn13_default_sub_header)+mIsbn13:getString(R.string.isbn13_default_sub_header)+getString(R.string.na)));
             mDescriptionTextView.setText((mDescription != null?mDescription:getString(R.string.decription_not_available)));
             if (mSubtitle != null) mSubtitleTextView.setText(mSubtitle);
             if (mComment != null) mCommentsEditText.setText(mComment);
             if (mRating != null) mRatingBar.setRating(mRating);
-            if (mAuthors != null) mAuthorTextView.setText(PREFIX_AUTHORS+mAuthors);
+            if (mAuthors != null) mAuthorTextView.setText(getString(R.string.authors_default_sub_header)+mAuthors);
 
         }
         Log.d(LOG_TAG,"data null");

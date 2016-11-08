@@ -117,7 +117,7 @@
 
                     <TextView
                         android:id="@+id/detail_book_isbn10"
-                        android:text="ISBN10: "
+                        android:text="@string/isbn10_default_sub_header"
                         style="?android:attr/textAppearanceMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
 
                     <TextView
                         android:id="@+id/detail_book_isbn13"
-                        android:text="ISBN13: "
+                        android:text="@string/isbn13_default_sub_header"
                         style="?android:attr/textAppearanceMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:text="Description"
+                        android:text="@string/detail_description_header"
                         style="?android:attr/textAppearanceMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -231,6 +231,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/detail_inner_horiz_margin"
+                        android:contentDescription="@string/content_desc_default_rating_bar"
                         app:srb_numberOfStars="5"
                         app:srb_stepSize="1.0"
                         app:srb_borderColor="@color/colorAccent"
@@ -253,7 +254,8 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/share_fab"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_fab"
         android:layout_gravity="bottom|end"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
