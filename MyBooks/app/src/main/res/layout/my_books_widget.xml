@@ -12,13 +12,29 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?android:attr/listPreferredItemHeightSmall">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/app_name"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
-            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:layout_margin="@dimen/widget_margin"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/widget_heading"
+                android:layout_margin="@dimen/widget_margin"
+                android:gravity="center_vertical"
+                android:textColor="#fff"
+                android:textAppearance="?android:textAppearanceLarge"
+                />
+        </LinearLayout>
     </FrameLayout>
 
     <FrameLayout
@@ -31,8 +47,8 @@
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="#dcc"
+            android:dividerHeight="@dimen/widget_divider_height"
             tools:listitem="@layout/widget_list_item" />
         <TextView
             android:id="@+id/widget_empty"

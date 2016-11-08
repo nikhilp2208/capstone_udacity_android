@@ -332,7 +332,7 @@ public class BookListActivity extends AppCompatActivity implements android.suppo
         protected void onPostExecute(Book book) {
             super.onPostExecute(book);
             if (book == null) {
-                Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.book_not_found_toast), Toast.LENGTH_SHORT).show();
                 return;
             }
             addBookToDb(book,mListId);
