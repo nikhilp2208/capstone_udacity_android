@@ -5,7 +5,11 @@
     <color name="colorPrimary">#4DB6AC</color>
     <color name="colorPrimaryDark">#00897B</color>
     <color name="colorAccent">#FF6E40</color>
+    <color name="text_color_light">#fff</color>
     <color name="metabar_background">#333</color>
     <color name="metabar_non_primary_text">#8fff</color>
     <color name="max_width_ll_background">#fff</color>
+    <color name="drawer_background">#fff</color>
+    <color name="widget_background">#fff</color>
+    <color name="detail_divider_color">#dcc</color>
 </resources>

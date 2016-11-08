@@ -23,4 +23,9 @@
     <dimen name="widget_min_resize_height">@dimen/widget_default_height</dimen>
     <dimen name="widget_divider_height">3px</dimen>
     <dimen name="drawer_width">240dp</dimen>
+    <dimen name="drawer_divider_height">0dp</dimen>
+    <dimen name="book_title_padding_bottom">4dp</dimen>
+    <dimen name="max_width_ll_elevation">2dp</dimen>
+    <dimen name="detail_card_view_layout_margin">12dp</dimen>
+    <dimen name="detail_divider_height">1dp</dimen>
 </resources>

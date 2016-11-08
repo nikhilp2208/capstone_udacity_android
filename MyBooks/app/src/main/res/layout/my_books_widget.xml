@@ -31,7 +31,7 @@
                 android:text="@string/widget_heading"
                 android:layout_margin="@dimen/widget_margin"
                 android:gravity="center_vertical"
-                android:textColor="#fff"
+                android:textColor="@color/text_color_light"
                 android:textAppearance="?android:textAppearanceLarge"
                 />
         </LinearLayout>
@@ -41,13 +41,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#fff">
+        android:background="@color/widget_background">
 
         <ListView
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="#dcc"
+            android:divider="@color/detail_divider_color"
             android:dividerHeight="@dimen/widget_divider_height"
             tools:listitem="@layout/widget_list_item" />
         <TextView
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="#fff"
+            android:background="@color/widget_background"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"
             android:text="@string/empty_book_list"/>

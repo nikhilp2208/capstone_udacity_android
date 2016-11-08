@@ -28,7 +28,7 @@
             android:paddingLeft="@dimen/cardview_padding"
             android:paddingTop="@dimen/cardview_padding"
             android:paddingRight="@dimen/cardview_padding"
-            android:paddingBottom="4dp"
+            android:paddingBottom="@dimen/book_title_padding_bottom"
             android:ellipsize="end"
             android:maxLines="2" />
 
