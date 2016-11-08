@@ -22,4 +22,5 @@
     <dimen name="widget_min_resize_width">220dp</dimen>
     <dimen name="widget_min_resize_height">@dimen/widget_default_height</dimen>
     <dimen name="widget_divider_height">3px</dimen>
+    <dimen name="drawer_width">240dp</dimen>
 </resources>

@@ -1,0 +1,7 @@
+<resources>
+    <!-- detail -->
+    <dimen name="detail_metabar_vert_padding">32dp</dimen>
+    <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
+    <dimen name="expandedTitleMarginBottom">64dp</dimen>
+    <dimen name="expandedTitleMargin">80dp</dimen>
+</resources>
