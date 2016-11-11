@@ -9,3 +9,9 @@ My Books helps you keep track of all the books you’ve read, which you are curr
 * Search by ISBN
 * Rate the book and share your opinions with friends.
 * Widget that displays the list of books that you are currently reading.
+
+## Libraries Used
+* [google-gson](https://github.com/google/gson)
+* [OkHttp](https://github.com/square/okhttp)
+* [Picasso](https://github.com/square/picasso)
+* [material-dialogs](https://github.com/afollestad/material-dialogs)
