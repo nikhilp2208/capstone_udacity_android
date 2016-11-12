@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
@@ -13,9 +14,13 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.npatil.android.mybooks.data.BooksContract;
 import com.squareup.picasso.Picasso;
@@ -92,6 +99,41 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_book_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_detail_delete) {
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.delete_book)
+                    .content(R.string.content_delete)
+                    .positiveText(R.string.content_delete_positive)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            deleteBook();
+                        }
+                    })
+                    .negativeText(R.string.content_delete_negative)
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            return;
+                        }
+                    })
+                    .show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_book_detail, container, false);
@@ -103,6 +145,7 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
                 getActivity().finish();
             }
         });
+        setHasOptionsMenu(true);
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -177,6 +220,15 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
         Log.i(LOG_TAG,"updateUri: "+ updateUri);
         Log.i(LOG_TAG,"contentValues: "+bookValues);
         getActivity().getContentResolver().update(updateUri,bookValues,null,null);
+    }
+
+    private void deleteBook() {
+        if(mBookId == null) {
+            return;
+        }
+        Uri deleteUri = BooksContract.BooksEntry.buildBooksUriWithBookId(mBookId);
+        getActivity().getContentResolver().delete(deleteUri,null,null);
+        getActivity().finish();
     }
 
     @Override
