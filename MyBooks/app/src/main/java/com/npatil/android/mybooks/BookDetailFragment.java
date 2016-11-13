@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
@@ -34,6 +35,9 @@ import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.npatil.android.mybooks.data.BooksContract;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BookDetailFragment extends Fragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
 
     final String LOG_TAG = this.getClass().getSimpleName();
@@ -51,6 +55,7 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
     private String mDescription;
     private String mComment;
     private String mAuthors;
+    private String mListId;
     private Integer mRating;
 
     private View mRootView;
@@ -129,8 +134,50 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
                     .show();
             return true;
         }
+        if (id == R.id.action_detail_move) {
+            List<String> availableBookLists = getAvailableLists();
+            if (availableBookLists == null) {
+                return false;
+            }
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.move_book)
+                    .items(availableBookLists)
+                    .itemsCallbackSingleChoice(availableBookLists.indexOf(mListId), new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                            updateBookListId(text.toString());
+                            return true;
+                        }
+                    })
+                    .positiveText(R.string.content_move_positive)
+                    .show();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateBookListId(String bookListId) {
+        Uri updateUri = BooksContract.BooksEntry.buildBooksUriWithBookId(mBookId);
+        ContentValues bookValues = new ContentValues();
+        bookValues.put(BooksContract.BooksEntry.COLUMN_LIST_ID, bookListId);
+        getActivity().getContentResolver().update(updateUri,bookValues,null,null);
+    }
+
+    private List<String> getAvailableLists() {
+        Cursor cursor = getActivity().getContentResolver().query(BooksContract.BooksEntry.CONTENT_URI,
+                new String[]{"DISTINCT " + BooksContract.BooksEntry.COLUMN_LIST_ID}, null, null, null);
+        List<String> booksList = new ArrayList<>();
+        if (cursor == null) {
+            return null;
+        }
+        try {
+            while (cursor.moveToNext()) {
+                booksList.add(cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
+        }
+        return booksList;
     }
 
     @Override
@@ -254,6 +301,7 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
             mDescription = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_DESCRIPTION));
             mComment = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_COMMENT));
             mAuthors = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_AUTHORS));
+            mListId = data.getString(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_LIST_ID));
 
             if(!data.isNull(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_RATING))) {
                 mRating = data.getInt(data.getColumnIndex(BooksContract.BooksEntry.COLUMN_RATING));
