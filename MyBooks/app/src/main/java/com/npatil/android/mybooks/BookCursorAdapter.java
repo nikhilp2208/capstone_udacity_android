@@ -38,6 +38,7 @@ public class BookCursorAdapter extends CursorRecyclerViewAdapter<BookCursorAdapt
         viewHolder.author.setText((author!=null?author:mContext.getString(R.string.default_author_card)));
         Picasso.with(mContext)
                 .load(cursor.getString(cursor.getColumnIndex(BooksContract.BooksEntry.COLUMN_COVER_PATH)))
+                .placeholder(R.drawable.image_loading)
                 .error(R.drawable.no_image)
                 .into(viewHolder.thumbnail);
     }

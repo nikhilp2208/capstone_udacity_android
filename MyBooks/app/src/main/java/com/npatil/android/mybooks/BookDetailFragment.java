@@ -311,6 +311,7 @@ public class BookDetailFragment extends Fragment implements android.support.v4.a
 
             Picasso.with(context)
                     .load(mCoverPath)
+                    .placeholder(R.drawable.image_loading)
                     .error(R.drawable.no_image)
                     .into(mCoverImageView);
 
